@@ -1,0 +1,28 @@
+Package: FuzzyRandom
+Type: Package
+Title: Level-Wise Statistics for Fuzzy Random Variables
+Version: 0.1.0
+Date: 2026-10-06
+Authors@R: c(person("Gunjan", "Aggrwal", comment = c(ORCID = "0009-0004-3213-4086"), role = c("aut", "cre"), email = "gunjanuk1994@gmail.com"), person("Mukul", "Bijalwan", comment = c(ORCID = "0009-0001-3040-6912"), role = "aut"), person("Mukul", "Jain", role = "aut"))
+Description: Level-wise statistical methods for fuzzy random variables,
+    implementing the Puri-Ralescu framework. Provides level-wise empirical
+    distribution functions, moments, covariance and correlation, a level-wise
+    Kolmogorov-Smirnov goodness-of-fit test, an approximate fuzzy normal
+    distribution with simulation, and level-wise central limit theorem and law
+    of large numbers inference. The package only depends on base R.
+License: GPL-3
+Encoding: UTF-8
+Imports: stats, graphics, grDevices
+Suggests: testthat (>= 3.0.0), knitr, rmarkdown
+VignetteBuilder: knitr
+Config/testthat/version: 3
+Config/roxygen2/version: 8.1.0
+NeedsCompilation: no
+Packaged: 2026-10-10 04:42:13 UTC; GUNJAN AGGRWAL
+Author: Gunjan Aggrwal [aut, cre] (ORCID:
+    <https://orcid.org/0009-0004-3213-4086>),
+  Mukul Bijalwan [aut] (ORCID: <https://orcid.org/0009-0001-3040-6912>),
+  Mukul Jain [aut]
+Maintainer: Gunjan Aggrwal <gunjanuk1994@gmail.com>
+Repository: CRAN
+Date/Publication: 2026-10-21 14:20:17 UTC

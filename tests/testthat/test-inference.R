@@ -1,0 +1,40 @@
+test_that("one-sample ks_test runs and is bounded", {
+  set.seed(9)
+  fs <- FuzzySample(replicate(50, triangular_fuzzy(-1, 0, 1), simplify = FALSE))
+  ks <- ks_test(fs, p0 = "pnorm")
+  expect_s3_class(ks, "FuzzyKS")
+  expect_true(all(ks$D_lower >= 0 & ks$D_lower <= 1))
+  expect_true(all(ks$p_upper >= 0 & ks$p_upper <= 1))
+  expect_gt(min(ks$p_lower, ks$p_upper), 0)
+})
+
+test_that("two-sample ks_test runs", {
+  set.seed(10)
+  a <- FuzzySample(replicate(40, triangular_fuzzy(0, 1, 2), simplify = FALSE))
+  b <- FuzzySample(replicate(40, triangular_fuzzy(1, 2, 3), simplify = FALSE))
+  ks <- ks_test(a, y = b)
+  expect_s3_class(ks, "FuzzyKS")
+  expect_equal(length(ks$alpha), length(a$alpha))
+})
+
+test_that("clt simulation produces a valid sample", {
+  set.seed(11)
+  s <- rnorm_fuzzy(200, triangular_fuzzy(0, 1, 2), diag(2) * 0.25)
+  cl <- clt(s)
+  expect_s3_class(cl, c("FuzzyCLT", "FuzzyNormal"))
+  expect_equal(cl$n, 200)
+  sim <- simulate(cl, nsim = 20)
+  expect_s3_class(sim, "FuzzySample")
+  expect_equal(sim$n, 20)
+  expect_true(all(sim$x[, , 1] <= sim$x[, , 2]))
+})
+
+test_that("lln half-width shrinks with sample size", {
+  set.seed(23)
+  s <- rnorm_fuzzy(300, triangular_fuzzy(0, 1, 2), diag(2) * 0.25)
+    w <- lln(s, levels = c(0, 1))
+  expect_s3_class(w, "FuzzyLLN")
+  df <- as.data.frame(w)
+  expect_true(df[["alpha=0"]][nrow(df)] < df[["alpha=0"]][1])
+  expect_true(all(diff(w$sizes) > 0))
+})

@@ -1,0 +1,72 @@
+---
+title: "Statistics of Fuzzy Random Variables -- A Short Tour"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Statistics of Fuzzy Random Variables}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>", fig.width = 6,
+                      fig.height = 4, dpi = 80)
+library(FuzzyRandom)
+set.seed(2024)
+```
+
+## Fuzzy numbers and samples
+
+A fuzzy number is the alpha-cut envelope `[X^-(alpha), X^+(alpha)]` with a
+non-decreasing lower and non-increasing upper endpoint.
+
+```{r fuzzy-numbers}
+tri <- triangular_fuzzy(0, 1, 2)
+trap <- trapezoidal_fuzzy(-1, 0, 1, 3)
+plot(tri)
+```
+
+A `FuzzySample` is an `(n, m, 2)` array of cuts for `n` i.i.d. fuzzy random
+variables observed on `m` alpha levels.
+
+```{r sample}
+s <- FuzzySample(replicate(60, triangular_fuzzy(0, 1, 2), simplify = FALSE))
+plot(s)
+```
+
+## Level-wise moments
+
+```{r moments}
+expectation(s)
+variance(s)
+correlation(s, FuzzySample(replicate(60, triangular_fuzzy(1, 2, 3),
+                                  simplify = FALSE)))
+```
+
+## Empirical distribution and goodness of fit
+
+The empirical CDFs and a level-wise Kolmogorov--Smirnov test against a
+reference distribution:
+
+```{r ecdf-ks}
+fe <- fuzzy_ecdf(s, alpha = c(0, 0.5, 1))
+plot(fe)
+ks_test(s, p0 = "pnorm")
+```
+
+## The fuzzy normal and the central limit theorem
+
+`fuzzy_normal()` builds a level-wise bivariate-normal fuzzy number. `clt()`
+applies the level-wise CLT to a sample, and `simulate()` draws from it:
+
+```{r clt}
+cl <- clt(s)
+summary(cl)
+plot(simulate(cl, nsim = 80))
+```
+
+`lln()` studies the shrinkage of the sample-mean width against sample size:
+
+```{r lln}
+w <- lln(s)
+plot(w)
+```
